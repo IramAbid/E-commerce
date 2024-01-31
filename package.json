@@ -1,0 +1,19 @@
+{
+  "name": "e-commerce",
+  "version": "1.0.0",
+  "description": "This a project to create REST API for creating, updating, deleting and searching products and its variants.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IramAbid/E-commerce.git"
+  },
+  "author": "Iram Abid",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IramAbid/E-commerce/issues"
+  },
+  "homepage": "https://github.com/IramAbid/E-commerce#readme"
+}
