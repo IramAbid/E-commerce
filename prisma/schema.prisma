@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Schema for the category
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  products    Product[] @relation("categories")
+}
+
+// Schema for the product
+model Product {
+  product_id   Int       @id @default(autoincrement())
+  product_name String
+  description  String?
+  product_price Float
+  categories   Category[] @relation("categories")
+  variants     Variant[]
+}
+
+//schema for variant
+model Variant {
+  variant_id   Int      @id @default(autoincrement())
+  color        String   @default("not valid")
+  product_id   Int
+  additional_cost Float[]
+  sku          SKU[]
+  product      Product  @relation(fields: [product_id], references: [product_id])
+}
+
+// Schema for the different skus a variant can have
+model SKU {
+  sku_id       Int      @id @default(autoincrement())
+  product_id   Int
+  attributes   AttributeSKU[]
+  variant_id   Int
+  variant      Variant    @relation(fields: [variant_id], references: [variant_id])
+}
+
+// Schema for the possible attributes of skus
+model Attribute {
+  attribute_id   Int      @id  @default(autoincrement())
+  attribute_name String
+  sku_id         Int
+  attributeSKU   AttributeSKU []
+}
+
+// pivot Schema for connecting sku and attribute
+model AttributeSKU {
+  sku            SKU  @relation(fields: [sku_id], references: [sku_id])
+  sku_id         Int
+  attribute      Attribute @relation(fields: [attribute_id], references: [attribute_id])
+  attribute_id   Int
+  @@id([sku_id, attribute_id])
+}
+
+//below is the code for one to many relation between sku and attributes, attributes and attributeSKU
+
+// model SKU {
+//   sku_id       Int      @id @default(autoincrement())
+//   product_id   Int
+//   attributes   Attribute[]
+//   variant_id   Int
+//   variant      Variant    @relation(fields: [variant_id], references: [variant_id])
+// }
+
+// model Attribute {
+//   attribute_id  Int      @id  @default(autoincrement())
+//   attribute_name String
+//   sku          SKU?     @relation(fields: [sku_id], references:[sku_id])
+//   sku_id       Int
+//   attributeSKU AttributeSKU []
+// }
+
+  
+// model AttributeSKU {
+//   id          Int       @default(autoincrement())
+//   sku_id      Int
+//   attribute   Attribute @relation(fields: [attribute_id], references: [attribute_id])
+//   attribute_id Int
+//   @@id([sku_id, attribute_id])
+// }
+
