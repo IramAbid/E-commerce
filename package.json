@@ -4,7 +4,8 @@
   "description": "This a project to create REST API for creating, updating, deleting and searching products and its variants.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js "
   },
   "repository": {
     "type": "git",
@@ -18,8 +19,10 @@
   "homepage": "https://github.com/IramAbid/E-commerce#readme",
   "dependencies": {
     "@prisma/client": "^5.9.0",
+    "body-parser": "^1.20.2",
     "express": "^4.18.2"
   },
+  "type": "module",
   "devDependencies": {
     "prisma": "^5.9.0"
   }
