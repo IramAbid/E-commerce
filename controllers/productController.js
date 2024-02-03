@@ -1,66 +1,38 @@
 import prisma from "../prisma/client/client.js";
 
+//function to add a product only
 
-async function addProductNew(req, res) {
+async function addProduct(req, res) {
   const productName = req.body.productName;
   const description = req.body.description;
   const productPrice = req.body.productPrice;
 
   try {
-    const addedProduct = await prisma.productNew.create({
+    const addedProduct = await prisma.product.create({
       data: {
-        product_name: productName,
+        productName: productName,
         description: description,
-        product_price: productPrice,
+        productPrice: productPrice,
       },
     });
 
     res.status(201).json(addedProduct);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Error creating product" });
   }
 };
 
-// getProduct will return first 5 products with their variants
-async function getProducts(req, res) {
-    try {
-        const products = await prisma.productNew.findMany({
-            take: 5,
-            select: {
-                product_id: true,
-                description: true,
-                product_name: true,
-                variantsNew: {
-                    select: {
-                        variant_id: true,
-                        name: true,
-                        attribute_name: true,
-                        attribute_value: true,
-                        additional_cost: true,
-                        stock_count: true,
-                    },
-                },
-              }
-        });
-     res.status(201).json(products);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error fetching products" });
-  }
-};
-
-//update 
+//function to update a product
 async function updateProduct(req, res) {
   const id = req.params.id;
-  const product_name=req.body.product_name;
+  const productName=req.body.productName;
   const description=req.body.description;
-  const product_price = req.body.product_price;
+  const productPrice = req.body.productPrice;
 
   try {
-      const product = await prisma.productNew.findUnique({
+      const product = await prisma.product.findUnique({
           where: {
-              product_id: Number(id), // Use product_id here
+              productId: Number(id), // Use product_id here
           },
       });
 
@@ -69,19 +41,20 @@ async function updateProduct(req, res) {
           throw new Error("Product not found");
       }
       const updatedData = {
-        product_name: product_name,
+        productName: productName,
         description: description,
-        product_price: product_price,
+        productPrice: productPrice,
     };
-      const updatedProduct = await prisma.productNew.update({
+      const updatedProduct = await prisma.product.update({
           where: {
-              product_id: Number(id), // Use product_id here
+              productId: Number(id),
           },
           data: {
-              product_name: product_name,
+              productName: productName,
               description: description,
-              product_price: product_price,
+              productPrice: productPrice,
           },
+          
       });
       return res.status(200).json(updatedProduct);
   } catch (err) {
@@ -93,41 +66,37 @@ async function updateProduct(req, res) {
   }
 }
 
-//delete product will delete product 
-async function deleteProduct(req, res) {
-    const id = req.params.id;
+//function to get a single product with its variant
+
+  async function getSingleProduct(req, res) {
+    const id= req.params.id;
     try {
-        //check if the product is actually exist
-        const product = prisma.productNew.findUnique({
-            where: {
-                product_id: Number(id)
-            }
-        })
-
-        if (!product) {
-            throw new Error("Product not found")
-        }
-
-        //now delete the product
-        const deletedProduct = await prisma.productNew.delete({
-            where: {
-                product_id: Number(id),
-            },
+        const products = await prisma.product.findMany({
+           where: {
+            productId: Number(id),
+           },
+            select: {
+                productId: true,
+                description: true,
+                productName: true,
+                variants: {
+                    select: {
+                        variantId: true,
+                        variantName: true,
+                        attributeName: true,
+                        attributeValue: true,
+                        additionalCost: true,
+                        stockCount: true,
+                    },
+                },
+              }
         });
-
-        res.status(200).json({
-            error: false,
-            data: deletedProduct,
-            message: "Product deleted successfully"
-        })
-
-    } catch (err) {
-        res.status(500).json({
-            error: true,
-            message: err.message
-        })
-    }
-}
+     res.status(201).json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error fetching products" });
+  }
+};
 
 
-export default {addProductNew,updateProduct,deleteProduct,getProducts};
+export default {addProduct,updateProduct,getSingleProduct};

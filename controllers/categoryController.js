@@ -1,5 +1,6 @@
 import prisma from "../prisma/client/client.js";
 
+//function to add a Category
 async function addCategory(req, res) {
   const categoryName = req.body.name;
   const description = req.body.description;

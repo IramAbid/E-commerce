@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "VariantNew" ALTER COLUMN "SKU" SET DATA TYPE TEXT;

@@ -1,12 +1,13 @@
 import prisma from "../prisma/client/client.js";
 
+//function to add a variant of a product
 async function addVariantsToProduct(req, res, productId) {
 
     console.log('Request body:', req.body);
   
-    const { name, attribute_name, attribute_value, additional_cost, stock_count,SKU } = req.body;
+    const { variantName, attributeName, attributeValue, additionalCost, stockCount,SKU } = req.body;
   
-    if (!name || !attribute_name || !attribute_value || !additional_cost || !stock_count ||!SKU) {
+    if (!variantName || !attributeName || !attributeValue || !additionalCost || !stockCount ||!SKU) {
       console.error('Missing required fields in request body');
       return res.status(400).json({
         error: true,
@@ -14,7 +15,7 @@ async function addVariantsToProduct(req, res, productId) {
       });
     }
   
-    if (attribute_name.length !== attribute_value.length || attribute_name.length !== additional_cost.length || attribute_name.length !== stock_count.length) {
+    if (attributeName.length !== attributeValue.length || attributeName.length !== additionalCost.length || attributeName.length !== stockCount.length) {
       console.error('Mismatched array lengths in request body');
       return res.status(400).json({
         error: true,
@@ -22,9 +23,9 @@ async function addVariantsToProduct(req, res, productId) {
       });
     }
   
-    const product = await prisma.productNew.findUnique({
+    const product = await prisma.product.findUnique({
       where: {
-        product_id: Number(productId),
+        productId: Number(productId),
       },
     });
   
@@ -38,14 +39,14 @@ async function addVariantsToProduct(req, res, productId) {
   
     try {
      
-      const addedVariant = await prisma.variantNew.create({
+      const addedVariant = await prisma.variant.create({
         data: {
-          product_id: Number(productId),
-          name:name,
-          attribute_name: attribute_name,
-          attribute_value: attribute_value,
-          additional_cost: additional_cost,
-          stock_count: stock_count,
+          productId: Number(productId),
+          variantName:variantName,
+          attributeName: attributeName,
+          attributeValue: attributeValue,
+          additionalCost: additionalCost,
+          stockCount: stockCount,
           SKU:SKU,
           },
       });
@@ -61,14 +62,14 @@ async function addVariantsToProduct(req, res, productId) {
   }
   
   
-  //delete variant 
+  //delete variant  
   async function deleteProductVariant(req, res) {
     const id = req.params.id;
     try {
         //check if the variant is actually exist
-        const variant = prisma.variantNew.findUnique({
+        const variant = prisma.variant.findUnique({
             where: {
-                variant_id: Number(id)
+                variantId: Number(id)
             }
         })
         
@@ -77,9 +78,9 @@ async function addVariantsToProduct(req, res, productId) {
         }
         console.log(variant);
         //now delete the variant
-        const deletedVariant = await prisma.variantNew.delete({
+        const deletedVariant = await prisma.variant.delete({
             where: {
-                variant_id: Number(id),
+                variantId: Number(id),
             },
         });
   
@@ -101,9 +102,9 @@ async function addVariantsToProduct(req, res, productId) {
   async function updateVariant(req, res) {
     const id= req.params.id;
     
-    const { name, attribute_name, attribute_value, additional_cost, stock_count,SKU } = req.body;
+    const { variantName, attributeName, attributeValue, additionalCost, stockCount,SKU } = req.body;
   
-    if (!name || !attribute_name || !attribute_value || !additional_cost || !stock_count ||!SKU) {
+    if (!variantName || !attributeName || !attributeValue || !additionalCost || !stockCount ||!SKU) {
       console.error('Missing required fields in request body');
       return res.status(400).json({
         error: true,
@@ -111,7 +112,7 @@ async function addVariantsToProduct(req, res, productId) {
       });
     }
   
-    if (attribute_name.length !== attribute_value.length || attribute_name.length !== additional_cost.length || attribute_name.length !== stock_count.length) {
+    if (attributeName.length !== attributeValue.length || attributeName.length !== additionalCost.length || attributeName.length !== stockCount.length) {
       console.error('Mismatched array lengths in request body');
       return res.status(400).json({
         error: true,
@@ -119,9 +120,9 @@ async function addVariantsToProduct(req, res, productId) {
       });
     }
   
-    const variant = await prisma.variantNew.findUnique({
+    const variant = await prisma.variant.findUnique({
       where: {
-        variant_id: Number(id),
+        variantId: Number(id),
       },
     });
   
@@ -133,17 +134,17 @@ async function addVariantsToProduct(req, res, productId) {
     }
   
     try {
-      const updatedVariant = await prisma.variantNew.update({
+      const updatedVariant = await prisma.variant.update({
         where: {
-        variant_id: Number(id),
+        variantId: Number(id),
         },
         data: {
-          variant_id: Number(id),
-          name:name,
-          attribute_name: attribute_name,
-          attribute_value: attribute_value,
-          additional_cost: additional_cost,
-          stock_count: stock_count,
+          variantId: Number(id),
+          variantName:variantName,
+          attributeName: attributeName,
+          attributeValue: attributeValue,
+          additionalCost: additionalCost,
+          stockCount: stockCount,
           SKU:SKU,
           },
       });
@@ -157,4 +158,6 @@ async function addVariantsToProduct(req, res, productId) {
       });
     }
   }
+
+  
   export default {addVariantsToProduct,deleteProductVariant,updateVariant};

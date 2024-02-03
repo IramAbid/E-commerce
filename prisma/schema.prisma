@@ -9,34 +9,34 @@ datasource db {
 
 // Schema for the category
 
-model Category {
-  id          Int       @id @default(autoincrement())
-  name        String
-  description String?
-  productNew   ProductNew[] @relation("categories")
+model category {
+  id            Int       @id @default(autoincrement())
+  name          String
+  description   String?
+  products      product[] @relation("categories")
 }
 
 // Schema for the product
 
-model ProductNew {
-  product_id    Int       @unique @id @default(autoincrement())
-  product_name  String
-  description   String?
-  product_price Float
-  categories    Category[] @relation("categories")
-  variantsNew   VariantNew[]
+model product {
+  productId      Int       @unique @id @default(autoincrement())
+  productName    String
+  description    String?
+  productPrice   Float
+  categories     category[] @relation("categories")
+  variants       variant[]
 }
 
 //schema for variant
 
-model VariantNew {
-  variant_id   Int      @unique @id @default(autoincrement())
-  product_id   Int
-  name  String
-  attribute_name String[]
-  attribute_value String[]
-  additional_cost Float[]
-  stock_count     Int[]
-  SKU             Int   @unique 
-  productNew      ProductNew  @relation(fields: [product_id], references: [product_id],onDelete: Cascade, onUpdate: Cascade )
+model variant {
+  variantId      Int      @unique @id @default(autoincrement())
+  productId      Int
+  variantName    String
+  attributeName  String[]
+  attributeValue String[]
+  additionalCost Float[]
+  stockCount     Int[]
+  SKU            String   @unique 
+  product        product  @relation(fields: [productId], references: [productId],onDelete: Cascade, onUpdate: Cascade )
 }

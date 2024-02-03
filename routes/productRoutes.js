@@ -1,17 +1,16 @@
 import { Router } from "express";
 import productControllers from "../controllers/productController.js";
 
-
-
 const router = Router();
 
-//routes for adding a resource
 
-  router.post('/product-new',productControllers.addProductNew);
+//routes for adding a product only (not variant)
+router.post('/product-new',productControllers.addProduct);
+
+//route to update a product only (not variants)
   router.put('/product-update/:id',productControllers.updateProduct);
-  router.delete('/product-delete/:id',productControllers.deleteProduct);
-  router.get('/product-get',productControllers.getProducts);
-
-
+  
+//route to get a product along with its variants
+router.get('/product-get/:id',productControllers.getSingleProduct);
 
 export default router;
